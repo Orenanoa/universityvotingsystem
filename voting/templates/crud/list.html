@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<p><a class="btn" href="{% url create_url %}">+ New</a></p>
+<div class="card">
+    <table>
+        <tr>
+            {% for f in fields %}<th>{{ f }}</th>{% endfor %}
+            <th>Actions</th>
+        </tr>
+        {% for obj in object_list %}
+        <tr>
+            <td><a href="{% url update_url obj.pk %}">{{ obj.name }}</a></td>
+            <td>{{ obj.starts_at|date:'M d, Y H:i' }}</td>
+            <td>{{ obj.ends_at|date:'M d, Y H:i' }}</td>
+            <td>{{ obj.published|yesno:'Yes,No' }}</td>
+            <td>{{ obj.n_positions }}</td>
+            <td>
+                <a class="btn btn-secondary btn-sm" href="{% url update_url obj.pk %}">Edit</a>
+                <a class="btn btn-secondary btn-sm" href="{% url 'manage_positions' obj.pk %}">Positions</a>
+                <form method="post" action="{% url delete_url obj.pk %}" style="display:inline;"
+                    onsubmit="return confirm('Delete this election? All its positions, candidates and votes will be removed.');">
+                    {% csrf_token %}
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">Nothing here yet.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

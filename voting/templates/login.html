@@ -1,103 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | Student Voting System</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #14532d;
-      font-family: Georgia, "Times New Roman", serif;
+{% extends 'base.html' %}
+{% block title %}Log in — University Voting System{% endblock %}
+{% block content %}
+<div class="card" style="max-width:420px; margin:2rem auto;">
+    <h1>Log in</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {{ field.errors }}
+        </div>
+        {% endfor %}
+        <button class="btn" type="submit" onclick="return checkLoginForm(this.form);">Log in</button>
+    </form>
+    <p style="margin-top:1rem; color:var(--muted);">Need an account? Contact the election administrator.</p>
+</div>
+<script>
+// Do not submit the login form if a field is empty.
+function checkLoginForm(form) {
+    var username = form.elements['username'];
+    var password = form.elements['password'];
+    if (username.value.trim() === '' || password.value.trim() === '') {
+        alert('Please enter both your username and password.');
+        return false;
     }
-    form {
-      width: 320px;
-      padding: 30px;
-      background: cornsilk;
-      border-radius: 6px;
-      border-top: 6px solid #14532d;
-      box-sizing: border-box;
-      text-align: center;
-    }
-    img {
-      width: 110px;
-      height: 110px;
-    }
-    h1 {
-      color: #14532d;
-      font-size: 24px;
-    }
-    label {
-      display: block;
-      text-align: left;
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-    input {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 10px;
-      margin-top: 5px;
-      font-size: 16px;
-      border: 1px solid #888;
-      border-radius: 4px;
-    }
-    #error {
-      color: #b00020;
-      font-weight: bold;
-      min-height: 20px;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      color: white;
-      background: #14532d;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-
-  <form id="loginForm">
-    <img src="logo.png" alt="IUIU logo">
-    <h1>Sign in to vote</h1>
-
-    <label>Username
-      <input type="text" id="username">
-    </label>
-
-    <label>Password
-      <input type="password" id="password">
-    </label>
-
-    <p id="error"></p>
-    <button type="button" onclick="login()">Login</button>
-  </form>
-
-  <script>
-    function login() {
-      var username = document.getElementById("username").value.trim();
-      var password = document.getElementById("password").value.trim();
-
-      // both fields are needed
-      if (username == "" || password == "") {
-        document.getElementById("error").innerHTML = "Enter your username and password.";
-        return;
-      }
-
-      // keep the name so the home page can show it
-      sessionStorage.setItem("voterName", username);
-      alert("Login successful. Welcome, " + username + "!");
-      window.location.href = "home.html";
-    }
-  </script>
-</body>
-</html>
+    return true;
+}
+</script>
+{% endblock %}

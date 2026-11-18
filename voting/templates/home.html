@@ -1,182 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home | Student Voting System</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      background: cornsilk;
-      color: #222;
-    }
-    header {
-      background: #14532d;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    header img {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: cornsilk;
-    }
-    .title {
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0 25px 0 10px;
-    }
-    nav ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-    }
-    nav a {
-      display: block;
-      color: white;
-      text-decoration: none;
-      padding: 10px 14px;
-    }
-    nav a:hover, nav a.active {
-      background: #0d3a1f;
-    }
-    nav a.logout {
-      border: 1px solid white;
-      margin-left: 10px;
-    }
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 30px 25px;
-    }
-    h1 {
-      color: #14532d;
-      margin-bottom: 5px;
-    }
-    h2 {
-      color: #14532d;
-      margin-top: 35px;
-    }
-    form {
-      max-width: 420px;
-    }
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 14px;
-    }
-    input, select, textarea {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 9px;
-      margin-top: 5px;
-      font-size: 16px;
-      font-family: inherit;
-      border: 1px solid #888;
-      border-radius: 4px;
-    }
-    input[readonly] {
-      background: #e6e6e6;
-    }
-    button, .btn {
-      display: inline-block;
-      padding: 10px 16px;
-      margin: 0 6px 6px 0;
-      font-size: 16px;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .green { background: #14532d; }
-    .dark { background: #333; }
-    .red { background: #b00020; }
-    .blue { background: #0b5ed7; }
-    .grey { background: #777; }
-    #msg {
-      color: #b00020;
-      font-weight: bold;
-      min-height: 20px;
-    }
-    .tablebox {
-      overflow-x: auto;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      background: white;
-    }
-    th, td {
-      border: 1px solid #aaa;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background: #ddd;
-    }
-    p {
-      line-height: 1.6;
-      max-width: 650px;
-    }
-    h2 {
-      margin-top: 30px;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <img src="logo.png" alt="IUIU logo">
-    <span class="title">Student Voting System</span>
-    <nav>
-      <ul>
-        <li><a href="home.html" class="active">Home</a></li>
-        <li><a href="students.html">Students</a></li>
-        <li><a href="election.html">Election</a></li>
-        <li><a href="position.html">Position</a></li>
-        <li><a href="candidate.html">Candidate</a></li>
-        <li><a href="voter.html">Voter</a></li>
-        <li><a href="ballot.html">Ballot</a></li>
-        <li><a href="login.html" class="logout" onclick="sessionStorage.removeItem('voterName')">Log out</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <h1>Welcome, <span id="name">Guest</span></h1>
+{% extends 'base.html' %}
+{% block title %}Home — University Voting System{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>Welcome to University Elections</h1>
     <p>Vote for the student leaders who will represent you.</p>
-
     <h2>About this system</h2>
     <p>
-      The university holds student elections every year, and counting paper ballots by hand is slow and
-      easy to get wrong. This system moves the whole process online. The electoral officer creates an
-      election, adds the positions up for grabs, and registers the students who are standing as candidates.
+        The university holds student elections every year, and counting paper ballots
+        by hand is slow and open to mistakes. This system moves the whole process
+        online: the electoral officer creates an election, adds the positions up for
+        grabs, and registers the students who are standing as candidates.
     </p>
     <p>
-      Eligible students register as voters for an election. Once the election has started, each voter
-      casts one ballot and picks one candidate for every position. The system checks that the ballot is
-      complete, accepts only one ballot per voter, and keeps the choice anonymous.
+        Eligible students register as voters for an election. Once the election is
+        started, each voter casts one ballot, choosing one candidate for every
+        position. The system checks that the ballot is complete, accepts only one
+        ballot per voter, and keeps the choice anonymous.
     </p>
     <p>
-      When the election ends, the votes are counted automatically and the results are ready to publish.
-      Use the menu to manage students, elections, positions, candidates and voters, or to cast your ballot.
+        When the election ends, the votes are counted automatically and the results
+        are ready to publish. Use the menu to manage students, elections, positions,
+        candidates and voters, or to cast your ballot.
     </p>
-  </main>
+    {% if not user.is_authenticated %}
+    <p><a class="btn" href="{% url 'login' %}">Log in to vote</a></p>
+    {% endif %}
+</div>
 
-  <script>
-    // show the name typed on the login page
-    var saved = sessionStorage.getItem("voterName");
-    if (saved) {
-      document.getElementById("name").innerHTML = saved;
-    }
-  </script>
-</body>
-</html>
+{% if open_elections %}
+<div class="card">
+    <h2>Open now</h2>
+    {% for election in open_elections %}
+    <div>
+        <strong>{{ election.name }}</strong> — ends {{ election.ends_at|date:'M d, Y H:i' }}
+        <a class="btn btn-sm" href="{% url 'election_detail' election.pk %}">View</a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if upcoming %}
+<div class="card">
+    <h2>Upcoming</h2>
+    {% for election in upcoming %}
+    <div>
+        <strong>{{ election.name }}</strong> — opens {{ election.starts_at|date:'M d, Y H:i' }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if closed %}
+<div class="card">
+    <h2>Recently closed</h2>
+    {% for election in closed %}
+    <div>
+        <strong>{{ election.name }}</strong> — closed {{ election.ends_at|date:'M d, Y H:i' }}
+        <a class="btn btn-secondary btn-sm" href="{% url 'results' election.pk %}">Results</a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if not open_elections and not upcoming and not closed %}
+<div class="card">
+    <p>No elections have been published yet.</p>
+</div>
+{% endif %}
+{% endblock %}

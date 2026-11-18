@@ -1,221 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Position | Student Voting System</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      background: cornsilk;
-      color: #222;
-    }
-    header {
-      background: #14532d;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    header img {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: cornsilk;
-    }
-    .title {
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0 25px 0 10px;
-    }
-    nav ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-    }
-    nav a {
-      display: block;
-      color: white;
-      text-decoration: none;
-      padding: 10px 14px;
-    }
-    nav a:hover, nav a.active {
-      background: #0d3a1f;
-    }
-    nav a.logout {
-      border: 1px solid white;
-      margin-left: 10px;
-    }
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 30px 25px;
-    }
-    h1 {
-      color: #14532d;
-      margin-bottom: 5px;
-    }
-    h2 {
-      color: #14532d;
-      margin-top: 35px;
-    }
-    form {
-      max-width: 420px;
-    }
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 14px;
-    }
-    input, select, textarea {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 9px;
-      margin-top: 5px;
-      font-size: 16px;
-      font-family: inherit;
-      border: 1px solid #888;
-      border-radius: 4px;
-    }
-    input[readonly] {
-      background: #e6e6e6;
-    }
-    button, .btn {
-      display: inline-block;
-      padding: 10px 16px;
-      margin: 0 6px 6px 0;
-      font-size: 16px;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .green { background: #14532d; }
-    .dark { background: #333; }
-    .red { background: #b00020; }
-    .blue { background: #0b5ed7; }
-    .grey { background: #777; }
-    #msg {
-      color: #b00020;
-      font-weight: bold;
-      min-height: 20px;
-    }
-    .tablebox {
-      overflow-x: auto;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      background: white;
-    }
-    th, td {
-      border: 1px solid #aaa;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background: #ddd;
-    }
-  </style>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}Manage: {{ election.name }}{% endblock %}
+{% block content %}
+<h1>{{ election.name }} — Positions & Candidates</h1>
 
-  <header>
-    <img src="logo.png" alt="IUIU logo">
-    <span class="title">Student Voting System</span>
-    <nav>
-      <ul>
-        <li><a href="home.html">Home</a></li>
-        <li><a href="students.html">Students</a></li>
-        <li><a href="election.html">Election</a></li>
-        <li><a href="position.html" class="active">Position</a></li>
-        <li><a href="candidate.html">Candidate</a></li>
-        <li><a href="voter.html">Voter</a></li>
-        <li><a href="ballot.html">Ballot</a></li>
-        <li><a href="login.html" class="logout" onclick="sessionStorage.removeItem('voterName')">Log out</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <h1>Position</h1>
-    <p>Define the positions students can stand for in an election.</p>
-
-    <form id="f">
-      <label>Position ID
-        <input type="text" id="position_id" placeholder="Auto-generated" readonly>
-      </label>
-      <label>Election
-        <select id="election">
-          <option value="">-- Select --</option>
-          <option>Guild Elections 2026</option><option>Faculty Representatives 2026</option><option>Freshers' Representatives 2026</option>
-        </select>
-      </label>
-      <label>Title
-        <input type="text" id="title" placeholder="e.g. Guild President">
-      </label>
-      <label>Description
-        <textarea id="description" rows="3" placeholder="What does this position do?"></textarea>
-      </label>
-
-      <p id="msg"></p>
-      <button type="button" class="dark" onclick="savePosition()">Save Position</button>
-      <button type="button" class="green" onclick="addCandidate()">Add Candidate</button>
-      <button type="button" class="blue" onclick="showCandidates()">Display Candidates</button>
-    </form>
+<div class="card">
     <h2>Positions</h2>
-    <div class="tablebox">
-      <table>
-        <tr><th>Position ID</th><th>Election</th><th>Title</th><th>Description</th></tr>
-          <tr><td>1</td><td>Guild Elections 2026</td><td>Guild President</td><td>Leads the student guild and represents students to management.</td></tr>
-          <tr><td>2</td><td>Guild Elections 2026</td><td>Vice President</td><td>Deputises the President and coordinates guild committees.</td></tr>
-          <tr><td>3</td><td>Guild Elections 2026</td><td>General Secretary</td><td>Keeps guild records and minutes of meetings.</td></tr>
-          <tr><td>4</td><td>Guild Elections 2026</td><td>Finance Secretary</td><td>Manages the guild budget and accounts.</td></tr>
-          <tr><td>5</td><td>Hall Council 2025</td><td>Hall Chairperson</td><td>Leads the hall council and handles residents' concerns.</td></tr>
-      </table>
-    </div>
-  </main>
+    <p><a class="btn" href="{% url 'position_create' election.pk %}">+ Add position</a></p>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Order</th>
+            <th>Candidates</th>
+            <th>Actions</th>
+        </tr>
+        {% for position in election.positions.all %}
+        <tr>
+            <td>{{ position.title }}</td>
+            <td>{{ position.order }}</td>
+            <td>
+                <ul style="margin-left:1rem;">
+                    {% for candidate in position.candidates.all %}
+                    <li>
+                        {{ candidate.name }} ({{ candidate.vote_count }} votes)
+                        <a class="btn btn-secondary btn-sm" href="{% url 'candidate_update' candidate.pk %}">Edit</a>
+                        <form method="post" action="{% url 'candidate_delete' candidate.pk %}" style="display:inline;"
+                            onsubmit="return confirm('Delete candidate {{ candidate.name }}?');">
+                            {% csrf_token %}
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </li>
+                    {% empty %}
+                    <li><em>No candidates</em></li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <a class="btn btn-sm" href="{% url 'candidate_create' position.pk %}">+ Candidate</a>
+                <a class="btn btn-secondary btn-sm" href="{% url 'position_update' position.pk %}">Edit</a>
+                <form method="post" action="{% url 'position_delete' position.pk %}" style="display:inline;"
+                    onsubmit="return confirm('Delete position {{ position.title }} and its candidates?');">
+                    {% csrf_token %}
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No positions yet.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 
-  <script>
-    function showMessage(text) {
-      document.getElementById("msg").innerHTML = text;
-    }
-
-    function checkFields() {
-      var election = document.getElementById("election").value;
-      var title = document.getElementById("title").value.trim();
-      var description = document.getElementById("description").value.trim();
-      if (election == "" || title == "" || description == "") {
-        showMessage("Please fill in all the fields.");
-        return false;
-      }
-      showMessage("");
-      return true;
-    }
-
-    function savePosition() {
-      if (checkFields()) {
-        alert("Position saved successfully.");
-        document.getElementById("f").reset();
-      }
-    }
-
-    function addCandidate() {
-      if (checkFields()) {
-        alert("Position saved. Opening candidates.");
-        window.location.href = "candidate.html";
-      }
-    }
-
-    function showCandidates() {
-      window.location.href = "candidate.html";
-    }
-  </script>
-</body>
-</html>
+<p><a class="btn btn-secondary" href="{% url 'manage_elections' %}">← Back to elections</a></p>
+{% endblock %}

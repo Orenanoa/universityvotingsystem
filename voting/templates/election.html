@@ -1,229 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Election | Student Voting System</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      background: cornsilk;
-      color: #222;
-    }
-    header {
-      background: #14532d;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    header img {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: cornsilk;
-    }
-    .title {
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0 25px 0 10px;
-    }
-    nav ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-    }
-    nav a {
-      display: block;
-      color: white;
-      text-decoration: none;
-      padding: 10px 14px;
-    }
-    nav a:hover, nav a.active {
-      background: #0d3a1f;
-    }
-    nav a.logout {
-      border: 1px solid white;
-      margin-left: 10px;
-    }
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 30px 25px;
-    }
-    h1 {
-      color: #14532d;
-      margin-bottom: 5px;
-    }
-    h2 {
-      color: #14532d;
-      margin-top: 35px;
-    }
-    form {
-      max-width: 420px;
-    }
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 14px;
-    }
-    input, select, textarea {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 9px;
-      margin-top: 5px;
-      font-size: 16px;
-      font-family: inherit;
-      border: 1px solid #888;
-      border-radius: 4px;
-    }
-    input[readonly] {
-      background: #e6e6e6;
-    }
-    button, .btn {
-      display: inline-block;
-      padding: 10px 16px;
-      margin: 0 6px 6px 0;
-      font-size: 16px;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .green { background: #14532d; }
-    .dark { background: #333; }
-    .red { background: #b00020; }
-    .blue { background: #0b5ed7; }
-    .grey { background: #777; }
-    #msg {
-      color: #b00020;
-      font-weight: bold;
-      min-height: 20px;
-    }
-    .tablebox {
-      overflow-x: auto;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      background: white;
-    }
-    th, td {
-      border: 1px solid #aaa;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background: #ddd;
-    }
-  </style>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}{{ election.name }} — University Voting System{% endblock %}
+{% block content %}
+<div class="card">
+    <h1>{{ election.name }}</h1>
+    <p>{{ election.description|linebreaksbr }}</p>
+    <p>
+        {% if election.is_open %}
+        <span class="badge badge-open">Open now</span>
+        {% elif election.starts_at > now %}
+        <span class="badge badge-upcoming">Upcoming</span>
+        {% else %}
+        <span class="badge badge-closed">Closed</span>
+        {% endif %}
+        {{ election.starts_at|date:'M d, Y H:i' }} → {{ election.ends_at|date:'M d, Y H:i' }}
+    </p>
+    {% if election.is_open and user.is_authenticated %}
+    <a class="btn" href="{% url 'ballot' election.pk %}">Cast your ballot</a>
+    {% elif not user.is_authenticated %}
+    <a class="btn" href="{% url 'login' %}">Log in to vote</a>
+    {% endif %}
+</div>
 
-  <header>
-    <img src="logo.png" alt="IUIU logo">
-    <span class="title">Student Voting System</span>
-    <nav>
-      <ul>
-        <li><a href="home.html">Home</a></li>
-        <li><a href="students.html">Students</a></li>
-        <li><a href="election.html" class="active">Election</a></li>
-        <li><a href="position.html">Position</a></li>
-        <li><a href="candidate.html">Candidate</a></li>
-        <li><a href="voter.html">Voter</a></li>
-        <li><a href="ballot.html">Ballot</a></li>
-        <li><a href="login.html" class="logout" onclick="sessionStorage.removeItem('voterName')">Log out</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <h1>Election</h1>
-    <p>Create an election, start it, and close it when voting ends.</p>
-
-    <form id="f">
-      <label>Election ID
-        <input type="text" id="election_id" placeholder="Auto-generated" readonly>
-      </label>
-      <label>Title
-        <input type="text" id="title" placeholder="e.g. Guild Elections 2026">
-      </label>
-      <label>Voters (registered)
-        <input type="number" id="voters" value="0" readonly>
-      </label>
-      <label>Status
-        <select id="status">
-          <option value="">-- Select --</option>
-          <option>Pending</option>
-          <option>Ongoing</option>
-          <option>Ended</option>
-        </select>
-      </label>
-
-      <p id="msg"></p>
-      <button type="button" class="dark" onclick="saveElection()">Save</button>
-      <button type="button" class="green" onclick="startElection()">Start Election</button>
-      <button type="button" class="red" onclick="endElection()">End Election</button>
-      <button type="button" class="blue" onclick="showCandidates()">Display Candidates</button>
-    </form>
-    <h2>Elections</h2>
-    <div class="tablebox">
-      <table>
-        <tr><th>Election ID</th><th>Title</th><th>Voters (registered)</th><th>Status</th></tr>
-          <tr><td>1</td><td>Guild Elections 2026</td><td>1200</td><td>Ongoing</td></tr>
-          <tr><td>2</td><td>Faculty Representatives 2026</td><td>340</td><td>Pending</td></tr>
-          <tr><td>3</td><td>Hall Council 2025</td><td>510</td><td>Ended</td></tr>
-          <tr><td>4</td><td>Freshers' Representatives 2026</td><td>280</td><td>Pending</td></tr>
-          <tr><td>5</td><td>Sports Council 2025</td><td>430</td><td>Ended</td></tr>
-      </table>
+{% if results_mode %}
+{% for position in positions %}
+<div class="card">
+    <h2>{{ position.title }}</h2>
+    <p>Total votes: {{ position.total_votes }}</p>
+    {% for candidate in position.results %}
+    <div class="result-bar">
+        {% with total=position.total_votes %}
+        <div
+            style="width: {% widthratio candidate.n_votes total 100 as pct %}{% if pct == 0 %}2{% else %}{{ pct }}{% endif %}%;">
+            {{ candidate.name }} — {{ candidate.n_votes }} vote{{ candidate.n_votes|pluralize }}
+            {% if total > 0 %}({% widthratio candidate.n_votes total 100 %}%){% endif %}
+        </div>
+        {% endwith %}
     </div>
-  </main>
-
-  <script>
-    function showMessage(text) {
-      document.getElementById("msg").innerHTML = text;
-    }
-
-    // title and status must be filled in
-    function checkFields() {
-      var title = document.getElementById("title").value.trim();
-      var status = document.getElementById("status").value;
-      if (title == "" || status == "") {
-        showMessage("Please enter a title and choose a status.");
-        return false;
-      }
-      showMessage("");
-      return true;
-    }
-
-    function saveElection() {
-      if (checkFields()) {
-        alert("Election saved successfully.");
-        document.getElementById("f").reset();
-      }
-    }
-
-    function startElection() {
-      if (checkFields()) {
-        alert("Election started.");
-      }
-    }
-
-    function endElection() {
-      if (confirm("End this election? Voting will close.")) {
-        alert("Election ended.");
-      }
-    }
-
-    function showCandidates() {
-      window.location.href = "candidate.html";
-    }
-  </script>
-</body>
-</html>
+    {% empty %}
+    <p>No candidates.</p>
+    {% endfor %}
+</div>
+{% endfor %}
+{% else %}
+{% for position in election.positions.all %}
+<div class="card">
+    <h2>{{ position.title }}</h2>
+    <ul>
+        {% for candidate in position.candidates.all %}
+        <li>{{ candidate.name }}</li>
+        {% empty %}
+        <li>No candidates registered.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% empty %}
+<div class="card">
+    <p>No positions configured for this election.</p>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

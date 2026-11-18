@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin')
+}}{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}" style="color:#fff; text-decoration:none;">
+        🗳 University Elections Admin
+    </a>
+</div>
+{% if user.is_anonymous %}
+{% include "admin/logged_out.html" with form=form of="delete" %}
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    #header {
+        background: #1a4d8f;
+        color: #fff;
+    }
+
+    #header a:link,
+    #header a:visited {
+        color: #dbe7f5;
+    }
+
+    .module h2,
+    .module caption,
+    .inlinegroup h2 {
+        background: #1a4d8f;
+    }
+
+    #user-tools a {
+        color: #ffd166;
+    }
+</style>
+{% endblock %}

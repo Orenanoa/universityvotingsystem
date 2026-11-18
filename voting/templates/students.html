@@ -1,224 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register Student | Student Voting System</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      background: cornsilk;
-      color: #222;
-    }
-    header {
-      background: #14532d;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    header img {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: cornsilk;
-    }
-    .title {
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0 25px 0 10px;
-    }
-    nav ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-    }
-    nav a {
-      display: block;
-      color: white;
-      text-decoration: none;
-      padding: 10px 14px;
-    }
-    nav a:hover, nav a.active {
-      background: #0d3a1f;
-    }
-    nav a.logout {
-      border: 1px solid white;
-      margin-left: 10px;
-    }
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 30px 25px;
-    }
-    h1 {
-      color: #14532d;
-      margin-bottom: 5px;
-    }
-    h2 {
-      color: #14532d;
-      margin-top: 35px;
-    }
-    form {
-      max-width: 420px;
-    }
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 14px;
-    }
-    input, select, textarea {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 9px;
-      margin-top: 5px;
-      font-size: 16px;
-      font-family: inherit;
-      border: 1px solid #888;
-      border-radius: 4px;
-    }
-    input[readonly] {
-      background: #e6e6e6;
-    }
-    button, .btn {
-      display: inline-block;
-      padding: 10px 16px;
-      margin: 0 6px 6px 0;
-      font-size: 16px;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .green { background: #14532d; }
-    .dark { background: #333; }
-    .red { background: #b00020; }
-    .blue { background: #0b5ed7; }
-    .grey { background: #777; }
-    #msg {
-      color: #b00020;
-      font-weight: bold;
-      min-height: 20px;
-    }
-    .tablebox {
-      overflow-x: auto;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      background: white;
-    }
-    th, td {
-      border: 1px solid #aaa;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background: #ddd;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <img src="logo.png" alt="IUIU logo">
-    <span class="title">Student Voting System</span>
-    <nav>
-      <ul>
-        <li><a href="home.html">Home</a></li>
-        <li><a href="students.html" class="active">Students</a></li>
-        <li><a href="election.html">Election</a></li>
-        <li><a href="position.html">Position</a></li>
-        <li><a href="candidate.html">Candidate</a></li>
-        <li><a href="voter.html">Voter</a></li>
-        <li><a href="ballot.html">Ballot</a></li>
-        <li><a href="login.html" class="logout" onclick="sessionStorage.removeItem('voterName')">Log out</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <h1>Register Student</h1>
-    <p>Add a student to the register.</p>
-
-    <form id="f">
-      <label>Student ID
-        <input type="text" id="studentid">
-      </label>
-      <label>First Name
-        <input type="text" id="firstname">
-      </label>
-      <label>Last Name
-        <input type="text" id="lastname">
-      </label>
-      <label>Gender
-        <select id="gender">
-          <option value="">-- Select --</option>
-          <option>Male</option>
-          <option>Female</option>
-        </select>
-      </label>
-      <label>Course
-        <input type="text" id="course">
-      </label>
-      <label>Year of Study
-        <select id="year">
-          <option value="">-- Select --</option>
-          <option>Year 1</option>
-          <option>Year 2</option>
-          <option>Year 3</option>
-          <option>Year 4</option>
-        </select>
-      </label>
-      <label>Session
-        <select id="session">
-          <option value="">-- Select --</option>
-          <option>Day</option>
-          <option>Evening</option>
-          <option>Weekend</option>
-        </select>
-      </label>
-
-      <p id="msg"></p>
-      <button type="button" class="green" onclick="registerStudent()">Register</button>
-    </form>
-    <h2>Registered Students</h2>
-    <div class="tablebox">
-      <table>
-        <tr><th>Student ID</th><th>First Name</th><th>Last Name</th><th>Gender</th><th>Course</th><th>Year of Study</th><th>Session</th></tr>
-          <tr><td>S001</td><td>Aisha</td><td>Nakato</td><td>Female</td><td>Computer Science</td><td>3</td><td>Day</td></tr>
-          <tr><td>S002</td><td>Ibrahim</td><td>Mugisha</td><td>Male</td><td>Business Administration</td><td>2</td><td>Evening</td></tr>
-          <tr><td>S003</td><td>Maryam</td><td>Namukasa</td><td>Female</td><td>Education</td><td>4</td><td>Day</td></tr>
-          <tr><td>S004</td><td>Yusuf</td><td>Kiggundu</td><td>Male</td><td>Law</td><td>1</td><td>Weekend</td></tr>
-          <tr><td>S005</td><td>Halima</td><td>Nabirye</td><td>Female</td><td>Information Technology</td><td>3</td><td>Day</td></tr>
-      </table>
-    </div>
-  </main>
-
-  <script>
-    function registerStudent() {
-      var fields = ["studentid", "firstname", "lastname", "gender", "course", "year", "session"];
-
-      // stop if any field is empty
-      for (var i = 0; i < fields.length; i++) {
-        var box = document.getElementById(fields[i]);
-        if (box.value.trim() == "") {
-          document.getElementById("msg").innerHTML = "Please fill in all the fields.";
-          box.focus();
-          return;
-        }
-      }
-
-      document.getElementById("msg").innerHTML = "";
-      alert("Student registered successfully.");
-      document.getElementById("f").reset();
-    }
-  </script>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Voters — University Voting System{% endblock %}
+{% block content %}
+<h1>Voter Registry</h1>
+<p><a class="btn" href="{% url 'voter_create' %}">+ Add voter</a></p>
+<div class="card">
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Student ID</th>
+            <th>Department</th>
+            <th>Gender</th>
+            <th>Year</th>
+            <th>Session</th>
+            <th>Verified</th>
+            <th>Actions</th>
+        </tr>
+        {% for profile in profiles %}
+        <tr>
+            <td>{{ profile.user.username }}</td>
+            <td>{{ profile.student_id }}</td>
+            <td>{{ profile.department|default:'—' }}</td>
+            <td>{{ profile.gender|default:'—' }}</td>
+            <td>{{ profile.year_of_study }}</td>
+            <td>{{ profile.session }}</td>
+            <td>
+                {% if profile.is_verified %}
+                <span class="badge badge-open">Verified</span>
+                {% else %}
+                <span class="badge badge-closed">Not verified</span>
+                {% endif %}
+            </td>
+            <td>
+                <form method="post" action="{% url 'voter_toggle_verify' profile.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button class="btn btn-secondary btn-sm" type="submit">
+                        {% if profile.is_verified %}Unverify{% else %}Verify{% endif %}
+                    </button>
+                </form>
+                <a class="btn btn-secondary btn-sm" href="{% url 'voter_update' profile.pk %}">Edit</a>
+                <form method="post" action="{% url 'voter_delete' profile.pk %}" style="display:inline;"
+                    onsubmit="return confirm('Delete {{ profile.user.username }}? This cannot be undone.');">
+                    {% csrf_token %}
+                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8">No voters registered yet.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

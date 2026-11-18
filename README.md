@@ -20,6 +20,7 @@ venv\Scripts\activate        # Windows  (Linux/macOS: source venv/bin/activate)
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py ensure_admin
+python manage.py seed_demo   # optional: loads demo election data
 python manage.py runserver
 ```
 
@@ -29,6 +30,10 @@ Open http://127.0.0.1:8000/ — the Django admin is at `/admin/`.
 
 - Username: `admin`
 - Password: `admin123`
+
+Demo accounts created by `seed_demo`: `staff` / `student123` (staff) and
+`jmutua`, `kwaweru`, `nchebet` (verified, can vote) and `todhiambo`
+(unverified) — all with password `student123`.
 
 ## Deployment
 

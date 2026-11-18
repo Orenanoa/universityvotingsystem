@@ -1,207 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voter | Student Voting System</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      background: cornsilk;
-      color: #222;
-    }
-    header {
-      background: #14532d;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    header img {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: cornsilk;
-    }
-    .title {
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0 25px 0 10px;
-    }
-    nav ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-    }
-    nav a {
-      display: block;
-      color: white;
-      text-decoration: none;
-      padding: 10px 14px;
-    }
-    nav a:hover, nav a.active {
-      background: #0d3a1f;
-    }
-    nav a.logout {
-      border: 1px solid white;
-      margin-left: 10px;
-    }
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 30px 25px;
-    }
-    h1 {
-      color: #14532d;
-      margin-bottom: 5px;
-    }
-    h2 {
-      color: #14532d;
-      margin-top: 35px;
-    }
-    form {
-      max-width: 420px;
-    }
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 14px;
-    }
-    input, select, textarea {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 9px;
-      margin-top: 5px;
-      font-size: 16px;
-      font-family: inherit;
-      border: 1px solid #888;
-      border-radius: 4px;
-    }
-    input[readonly] {
-      background: #e6e6e6;
-    }
-    button, .btn {
-      display: inline-block;
-      padding: 10px 16px;
-      margin: 0 6px 6px 0;
-      font-size: 16px;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .green { background: #14532d; }
-    .dark { background: #333; }
-    .red { background: #b00020; }
-    .blue { background: #0b5ed7; }
-    .grey { background: #777; }
-    #msg {
-      color: #b00020;
-      font-weight: bold;
-      min-height: 20px;
-    }
-    .tablebox {
-      overflow-x: auto;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      background: white;
-    }
-    th, td {
-      border: 1px solid #aaa;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background: #ddd;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <img src="logo.png" alt="IUIU logo">
-    <span class="title">Student Voting System</span>
-    <nav>
-      <ul>
-        <li><a href="home.html">Home</a></li>
-        <li><a href="students.html">Students</a></li>
-        <li><a href="election.html">Election</a></li>
-        <li><a href="position.html">Position</a></li>
-        <li><a href="candidate.html">Candidate</a></li>
-        <li><a href="voter.html" class="active">Voter</a></li>
-        <li><a href="ballot.html">Ballot</a></li>
-        <li><a href="login.html" class="logout" onclick="sessionStorage.removeItem('voterName')">Log out</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
+{% extends 'base.html' %}
+{% block title %}Voter profile{% endblock %}
+{% block content %}
+<div class="card" style="max-width:540px;">
     <h1>Voter</h1>
-    <p>Register a student as a voter in an election.</p>
-
-    <form id="f">
-      <label>Voter ID
-        <input type="text" id="voter_id" placeholder="Auto-generated" readonly>
-      </label>
-      <label>Election
-        <select id="election">
-          <option value="">-- Select --</option>
-          <option>Guild Elections 2026</option><option>Faculty Representatives 2026</option><option>Freshers' Representatives 2026</option>
-        </select>
-      </label>
-      <label>Student
-        <select id="student">
-          <option value="">-- Select --</option>
-          <option>Aisha Nakato</option><option>Ibrahim Mugisha</option><option>Maryam Namukasa</option><option>Yusuf Kiggundu</option><option>Halima Nabirye</option>
-        </select>
-      </label>
-      <label>Age
-        <input type="number" id="age" placeholder="e.g. 20">
-      </label>
-      <label>Status
-        <input type="text" id="status" value="Not voted" readonly>
-      </label>
-
-      <p id="msg"></p>
-      <button type="button" class="dark" onclick="registerVoter()">Register</button>
-      <a href="ballot.html" class="btn green">Vote</a>
-    </form>
-    <h2>Registered Voters</h2>
-    <div class="tablebox">
-      <table>
-        <tr><th>Voter ID</th><th>Election</th><th>Student</th><th>Age</th><th>Status</th></tr>
-          <tr><td>101</td><td>Guild Elections 2026</td><td>Aisha Nakato</td><td>21</td><td>Voted</td></tr>
-          <tr><td>102</td><td>Guild Elections 2026</td><td>Ibrahim Mugisha</td><td>20</td><td>Not voted</td></tr>
-          <tr><td>103</td><td>Guild Elections 2026</td><td>Maryam Namukasa</td><td>23</td><td>Voted</td></tr>
-          <tr><td>104</td><td>Guild Elections 2026</td><td>Yusuf Kiggundu</td><td>19</td><td>Not voted</td></tr>
-          <tr><td>105</td><td>Guild Elections 2026</td><td>Halima Nabirye</td><td>22</td><td>Voted</td></tr>
-      </table>
-    </div>
-  </main>
-
-  <script>
-    function registerVoter() {
-      var election = document.getElementById("election").value;
-      var student = document.getElementById("student").value;
-      var age = document.getElementById("age").value;
-
-      if (election == "" || student == "" || age == "") {
-        document.getElementById("msg").innerHTML = "Please fill in all the fields.";
-        return;
-      }
-
-      document.getElementById("msg").innerHTML = "";
-      alert("Voter registered successfully.");
-      document.getElementById("f").reset();
-    }
-  </script>
-</body>
-</html>
+    <table>
+        <tr>
+            <th>Username</th>
+            <td>{{ profile.user.username }}</td>
+        </tr>
+        <tr>
+            <th>Student ID</th>
+            <td>{{ profile.student_id }}</td>
+        </tr>
+        <tr>
+            <th>Department</th>
+            <td>{{ profile.department|default:'—' }}</td>
+        </tr>
+        <tr>
+            <th>Verified</th>
+            <td>{{ profile.is_verified|yesno:'Yes,No' }}</td>
+        </tr>
+    </table>
+    <p style="margin-top:1rem;">
+        <a class="btn" href="{% url 'voter_update' profile.pk %}">Edit</a>
+        <a class="btn btn-secondary" href="{% url 'manage_voters' %}">Back</a>
+    </p>
+</div>
+{% endblock %}

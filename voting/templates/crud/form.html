@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<div class="card" style="max-width:640px;">
+    <form method="post" {% if enctype %}enctype="multipart/form-data" {% endif %}>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+        <div class="form-group">
+            {% if field.field.widget.input_type == 'checkbox' %}
+            <label>{{ field }} {{ field.label }}</label>
+            {% else %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% endif %}
+            {{ field.errors }}
+            {% if field.help_text %}<small style="color:var(--muted);">{{ field.help_text }}</small>{% endif %}
+        </div>
+        {% endfor %}
+        <button class="btn" type="submit" onclick="return checkForm(this.form);">Save</button>
+        <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">Cancel</a>
+    </form>
+</div>
+<script>
+// Simple validation: do not submit the form if a required field is empty.
+// On success, show an alert message.
+function checkForm(form) {
+    var fields = form.querySelectorAll('input[required], select[required], textarea[required]');
+    for (var i = 0; i < fields.length; i++) {
+        if (fields[i].value.trim() === '') {
+            alert('Please fill in the "' + fields[i].name + '" field before saving.');
+            fields[i].focus();
+            return false;  // stop the form from submitting
+        }
+    }
+    alert('Form submitted successfully!');
+    return true;
+}
+</script>
+{% endblock %}

@@ -1,75 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Election</title>
-  <style>
-    body { margin: 0; min-height: 100vh; display: flex; font-family: system-ui, sans-serif; }
-    .left { background-color: green; width: 200px; flex-shrink: 0; padding: 16px; }
-    .left ul { list-style: none; margin: 0; padding: 0; }
-    .left a { display: block; padding: 8px; color: #fff; text-decoration: none; border-radius: 4px; }
-    .left a:hover, .left a.active { background: rgba(0,0,0,.25); }
-    .right { background-color: cornsilk; flex: 1; padding: 24px; }
-    form { max-width: 420px; display: flex; flex-direction: column; gap: 14px; }
-    label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; }
-    input, select, button { padding: 10px; font-size: 1rem; }
-    input[readonly] { background: #eee; }
-    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
-    button { color: #fff; border: 0; border-radius: 4px; cursor: pointer; }
-    .save { background: #333; }
-    .start { background: green; }
-    .end { background: #b00020; }
-    .view { background: #0b5ed7; }
-    @media (max-width: 600px) { body { flex-direction: column; } .left { width: auto; } }
-  </style>
-</head>
-<body>
-  <aside class="left">
-    <nav aria-label="Main">
-      <ul>
-        <li><a href="home.html">Home</a></li>
-        <li><a href="students.html">Students</a></li>
-        <li><a href="election.html" class="active">Election</a></li>
-        <li><a href="position.html">Position</a></li>
-        <li><a href="candidate.html">Candidate</a></li>
-        <li><a href="voter.html">Voter</a></li>
-        <li><a href="ballot.html">Ballot</a></li>
-      </ul>
-    </nav>
-  </aside>
-
-  <main class="right">
-    <h1>Election</h1>
-    <form action="election_action.php" method="post">
-      <label>Election ID
-        <input type="text" name="election_id" readonly placeholder="Auto-generated">
-      </label>
-
-      <label>Title
-        <input type="text" name="title" placeholder="e.g. Guild Elections 2026" required>
-      </label>
-
-      <label>Voters (registered)
-        <input type="number" name="voters" value="0" min="0" readonly>
-      </label>
-
-      <label>Status
-        <select name="status">
-          <option value="pending">Pending</option>
-          <option value="ongoing">Ongoing</option>
-          <option value="ended">Ended</option>
-        </select>
-      </label>
-
-      <div class="actions">
-        <button type="submit" name="action" value="save" class="save">Save</button>
-        <button type="submit" name="action" value="start" class="start">Start Election</button>
-        <button type="submit" name="action" value="end" class="end"
-                onclick="return confirm('End this election? Voting will close.');">End Election</button>
-        <button type="submit" name="action" value="display_candidates" class="view">Display Candidates</button>
-      </div>
-    </form>
-  </main>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Elections — University Voting System{% endblock %}
+{% block content %}
+<h1>All Elections</h1>
+{% for election in elections %}
+<div class="card">
+    <h2>{{ election.name }}</h2>
+    <p>{{ election.description|linebreaksbr }}</p>
+    <p>
+        {{ election.starts_at|date:'M d, Y H:i' }} → {{ election.ends_at|date:'M d, Y H:i' }}
+        · {{ election.n_positions }} positions · {{ election.n_candidates }} candidates
+    </p>
+    <a class="btn btn-sm" href="{% url 'election_detail' election.pk %}">Details</a>
+    <a class="btn btn-secondary btn-sm" href="{% url 'results' election.pk %}">Results</a>
+</div>
+{% empty %}
+<div class="card">
+    <p>No elections published yet.</p>
+</div>
+{% endfor %}
+{% endblock %}

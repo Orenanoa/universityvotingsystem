@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Manage: {{ election.name }}{% endblock %}
+{% block content %}
+<h1>{{ election.name }} — Positions & Candidates</h1>
+
+<div class="card">
+    <h2>Positions</h2>
+    <p><a class="btn" href="{% url 'position_create' election.pk %}">+ Add position</a></p>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Order</th>
+            <th>Candidates</th>
+            <th>Actions</th>
+        </tr>
+        {% for position in election.positions.all %}
+        <tr>
+            <td>{{ position.title }}</td>
+            <td>{{ position.order }}</td>
+            <td>
+                <ul style="margin-left:1rem;">
+                    {% for candidate in position.candidates.all %}
+                    <li>
+                        {{ candidate.name }} ({{ candidate.vote_count }} votes)
+                        <a class="btn btn-secondary btn-sm" href="{% url 'candidate_update' candidate.pk %}">Edit</a>
+                        <form method="post" action="{% url 'candidate_delete' candidate.pk %}" style="display:inline;"
+                            onsubmit="return confirm('Delete candidate {{ candidate.name }}?');">
+                            {% csrf_token %}
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </li>
+                    {% empty %}
+                    <li><em>No candidates</em></li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <a class="btn btn-sm" href="{% url 'candidate_create' position.pk %}">+ Candidate</a>
+                <a class="btn btn-secondary btn-sm" href="{% url 'position_update' position.pk %}">Edit</a>
+                <form method="post" action="{% url 'position_delete' position.pk %}" style="display:inline;"
+                    onsubmit="return confirm('Delete position {{ position.title }} and its candidates?');">
+                    {% csrf_token %}
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No positions yet.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<p><a class="btn btn-secondary" href="{% url 'manage_elections' %}">← Back to elections</a></p>
+{% endblock %}
